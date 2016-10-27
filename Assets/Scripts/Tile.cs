@@ -4,10 +4,11 @@ using System.Collections;
 public class Tile : MonoBehaviour {
 
     // Is this a mine?
-    public bool     mine;
-    public Sprite[] tileSprites = new Sprite[9];
-    public Sprite   mineSprite;
-    public float    percentageOfMine = 0.15f;
+    public bool             mine;
+
+    //TODO Julian: make number of bombs instead of percentage and integrate in grid instead of tile
+    public float            percentageOfMine = 0.15f;
+    private GridManager     grid;
 
     private int? nbOfAdjacentMines;
     public int NbOfAdjacentMines
@@ -18,7 +19,7 @@ public class Tile : MonoBehaviour {
             {
                 int x = (int)transform.position.x;
                 int y = (int)transform.position.y;
-                nbOfAdjacentMines = Grid.CalculateNbOfAdjacentMines(x, y);
+                nbOfAdjacentMines = grid.CalculateNbOfAdjacentMines(x, y);
             }
 
             return nbOfAdjacentMines.Value;
@@ -26,6 +27,8 @@ public class Tile : MonoBehaviour {
     }
 
     void Start () {
+        grid = FindObjectOfType<GridManager>();
+
         // Randomly decide if it's a mine or not
         mine = Random.value < percentageOfMine;
     }
@@ -33,7 +36,7 @@ public class Tile : MonoBehaviour {
     public void LoadSprite()
     {
         //Ternary   x = y ? a : b;   if y is true, x = a else, x = b
-        GetComponent<SpriteRenderer>().sprite = mine ? mineSprite : tileSprites[NbOfAdjacentMines];
+        GetComponent<SpriteRenderer>().sprite = mine ? grid.mineSprite : grid.tileSprites[NbOfAdjacentMines];
     }
 
     // Is it still covered?
@@ -43,12 +46,13 @@ public class Tile : MonoBehaviour {
     }
 
     //Events
+    //TODO Julian: Add right mouse button functionality
     void OnMouseUpAsButton()
     {
         // It's a mine
         if (mine)
         {
-            Grid.UncoverMines();
+            grid.UncoverMines();
 
             // game over
             print("you lose");
@@ -63,7 +67,7 @@ public class Tile : MonoBehaviour {
             int y = (int)transform.position.y;
 
             // uncover area without mines
-            Grid.FloodFillUncover(x, y, new bool[Grid.numberOfColumns, Grid.numberOfRows]);
+            grid.FloodFillUncover(x, y, new bool[grid.numberOfColumns, grid.numberOfRows]);
 
             // ToDo find out if the game was won now
             // ...

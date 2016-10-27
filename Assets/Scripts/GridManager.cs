@@ -1,12 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Grid : MonoBehaviour {
-    public GameObject   tilePrefab;
-    public static int   numberOfColumns = 10;
-    public static int   numberOfRows = 4;
-    public float        distanceBetweenTiles = 1.0f;
-    public static Tile[,] tiles;
+//TODO Julian: Create GameManager to check for win and lose conditions. 
+
+public class GridManager : MonoBehaviour {
+    public GameObject       tilePrefab;
+    public int              numberOfColumns = 10;
+    public int              numberOfRows = 4;
+    public float            distanceBetweenTiles = 1.0f;
+    private static Tile[,]  tiles;
+    public Sprite[] tileSprites = new Sprite[9];
+    public Sprite mineSprite;
 
     void Start () {
         tiles = new Tile[numberOfColumns, numberOfRows];
@@ -44,7 +48,7 @@ public class Grid : MonoBehaviour {
         }
     }
 
-    public static void UncoverMines()
+    public void UncoverMines()
     {
         foreach (Tile tile in tiles)
             if (tile.mine)
@@ -52,7 +56,7 @@ public class Grid : MonoBehaviour {
     }
 
     // Find out if a mine is at the coordinates
-    public static bool MineAt(int x, int y)
+    public bool MineAt(int x, int y)
     {
         // Coordinates in range? Then check for mine.
         if (x >= 0 && y >= 0 && x < numberOfColumns && y < numberOfRows)
@@ -61,7 +65,7 @@ public class Grid : MonoBehaviour {
     }
 
     // Count adjacent mines for an element
-    public static int CalculateNbOfAdjacentMines(int x, int y)
+    public int CalculateNbOfAdjacentMines(int x, int y)
     {
         int count = 0;
 
@@ -78,7 +82,7 @@ public class Grid : MonoBehaviour {
     }
 
     // Flood Fill empty elements
-    public static void FloodFillUncover(int x, int y, bool[,] visited)
+    public void FloodFillUncover(int x, int y, bool[,] visited)
     {
         // Coordinates in Range?
         if (x >= 0 && y >= 0 && x < numberOfColumns && y < numberOfRows)
