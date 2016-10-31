@@ -8,9 +8,13 @@ public class GridManager : MonoBehaviour {
     public int              numberOfColumns = 10;
     public int              numberOfRows = 4;
     public float            distanceBetweenTiles = 1.0f;
-    private static Tile[,]  tiles;
-    public Sprite[] tileSprites = new Sprite[9];
-    public Sprite mineSprite;
+    public int              numberOfBombs = 30;
+    public Tile[,]  tiles;
+    public Sprite[]         tileSprites = new Sprite[9];
+    public Sprite           mineSprite;
+    public Sprite           flagSprite;
+    public Sprite           defaultSprite;
+    private GameObject      grid;
 
     void Start () {
         tiles = new Tile[numberOfColumns, numberOfRows];
@@ -30,6 +34,7 @@ public class GridManager : MonoBehaviour {
 
     // Update is called once per frame
     void CreateTiles() {
+        grid = new GameObject("Grid");
         float xOffset = 0.0f;
         float yOffset = 0.0f;
 
@@ -41,18 +46,51 @@ public class GridManager : MonoBehaviour {
                 var instance = (GameObject)Instantiate(tilePrefab, new Vector2(transform.position.x + xOffset, transform.position.y + yOffset), transform.rotation);
                 tiles[column, row] = instance.GetComponent<Tile>();
                 xOffset += distanceBetweenTiles;
+
+                instance.transform.parent = grid.transform;
             }
             //Reset the x offset for the next row
             xOffset = 0.0f;
             yOffset += distanceBetweenTiles;
         }
+
+        //randomize the bomb placement
+        for(int i = 0; i < numberOfBombs; i++)
+        {
+
+            //determines if a bomb has been placed this iteration
+            bool bombNotPlaced = true;
+
+            //repeats as long as a bomb has not been placed
+            while (bombNotPlaced)
+            {
+
+                //get a random tile
+                int randomColumn = Random.Range(0, numberOfColumns);
+                int randomRow = Random.Range(0, numberOfRows);
+
+                //if it doesn't already have a bomb place one
+                if(!tiles[randomColumn, randomRow].mine)
+                {
+                    tiles[randomColumn, randomRow].mine = true;
+                    bombNotPlaced = false;
+                }
+            }
+        }
     }
 
+    //discovers a mine by changing the sprite to mine
     public void UncoverMines()
     {
         foreach (Tile tile in tiles)
+        {
             if (tile.mine)
+            {
                 tile.LoadSprite();
+                tile.discovered = true;
+            }
+        }
+             
     }
 
     // Find out if a mine is at the coordinates
@@ -94,7 +132,10 @@ public class GridManager : MonoBehaviour {
             CalculateNbOfAdjacentMines(x, y);
 
             // uncover element
-            tiles[x, y].LoadSprite();
+            if (!tiles[x, y].flagSet)
+            {
+                tiles[x, y].LoadSprite();
+            }
 
             // close to a mine? then no more work needed here
             if (tiles[x, y].NbOfAdjacentMines > 0)
@@ -109,5 +150,12 @@ public class GridManager : MonoBehaviour {
             FloodFillUncover(x, y - 1, visited);
             FloodFillUncover(x, y + 1, visited);
         }
+    }
+
+    //resets the board
+    public void ResetBoard()
+    {
+        Destroy(grid.gameObject);
+        CreateTiles();
     }
 }
