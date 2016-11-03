@@ -8,12 +8,13 @@ using System.Collections;
 public class GameManager : MonoBehaviour 
 {
 	public int numberOfBombsLeft;
-    public int numberOfFlagsSet = 0;
     private GridManager grid;
     private SmileyButton smileyButton;
+    public SpriteCounter bombCounter;   //TODO supi: would it be better to use getByTag or something?
     private bool m_GameOver;
     private bool m_Victory;
     private bool m_TileBeingPressed;
+    private int m_numberOfFlagsSet = 0;
 
     public bool GameOver
     {
@@ -36,11 +37,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public int NumberOfFlagSet
+    {
+        get { return m_numberOfFlagsSet; }
+        set
+        {
+            m_numberOfFlagsSet = value;
+            bombCounter.Display(grid.numberOfBombs - m_numberOfFlagsSet);
+        }
+    }
+
     void Start()
     {
         grid = GetComponent<GridManager>();
         smileyButton = FindObjectOfType<SmileyButton>();
         numberOfBombsLeft = grid.numberOfBombs;
+        bombCounter.Display(grid.numberOfBombs);
     }
 
     void Update()
@@ -50,11 +62,11 @@ public class GameManager : MonoBehaviour
             ResetGame();
 
         //if there are no bombs left and there are the same amount of flags placed you win
-        if(numberOfBombsLeft == 0 && numberOfFlagsSet == grid.numberOfBombs)
+        if(numberOfBombsLeft == 0 && NumberOfFlagSet == grid.numberOfBombs)
             SetToVictory();
 
         //to keep track of bambs and flag for debugging
-        Debug.Log("bombs left: " + numberOfBombsLeft + "     flags placed: " + numberOfFlagsSet);
+        Debug.Log("bombs left: " + numberOfBombsLeft + "     flags placed: " + NumberOfFlagSet);
     }
 
     //set the game to game over
@@ -79,6 +91,7 @@ public class GameManager : MonoBehaviour
         GameOver = false;
         grid.ResetBoard();
         smileyButton.UpdateSprite();
+        NumberOfFlagSet = 0;
     }
 
 }

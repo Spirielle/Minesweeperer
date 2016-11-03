@@ -114,7 +114,7 @@ public class Tile : MonoBehaviour {
             {
                 gameManager.numberOfBombsLeft++;
             }
-            gameManager.numberOfFlagsSet--;
+            gameManager.NumberOfFlagSet--;
         }
 
         //otherwise set it to flag
@@ -128,7 +128,7 @@ public class Tile : MonoBehaviour {
             {
                 gameManager.numberOfBombsLeft--;
             }
-            gameManager.numberOfFlagsSet++;
+            gameManager.NumberOfFlagSet++;
         }
     }
 }
