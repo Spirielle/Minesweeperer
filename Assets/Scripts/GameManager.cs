@@ -5,16 +5,20 @@
 using UnityEngine;
 using System.Collections;
 
-public class GameManager : MonoBehaviour 
+public class GameManager : MonoBehaviour
 {
-	public int numberOfBombsLeft;
+    public int numberOfBombsLeft;
     private GridManager grid;
     private SmileyButton smileyButton;
     public SpriteCounter bombCounter;   //TODO supi: would it be better to use getByTag or something?
+    public SpriteCounter timerDisplay;
     private bool m_GameOver;
     private bool m_Victory;
     private bool m_TileBeingPressed;
     private int m_numberOfFlagsSet = 0;
+    private float m_timer = 0.0f;
+
+    public bool GameStarted { get; set; }
 
     public bool GameOver
     {
@@ -47,6 +51,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public float Timer
+    {
+        get { return m_timer; }
+        set
+        {
+            m_timer = value;
+            timerDisplay.Display((int)m_timer);
+        }
+    }
+
     void Start()
     {
         grid = GetComponent<GridManager>();
@@ -57,6 +71,9 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        if(GameStarted)
+            Timer += Time.deltaTime;
+
         //"R" resets the game
         if (Input.GetKeyUp(KeyCode.R))
             ResetGame();
@@ -92,6 +109,8 @@ public class GameManager : MonoBehaviour
         grid.ResetBoard();
         smileyButton.UpdateSprite();
         NumberOfFlagSet = 0;
+        GameStarted = false;
+        Timer = 0.0f;
     }
 
 }

@@ -78,6 +78,9 @@ public class Tile : MonoBehaviour {
     //flip the tile to discover what is underneath
     private void DiscoverTile()
     {
+        if (!gameManager.GameStarted)
+            gameManager.GameStarted = true;
+
         // It's a mine
         if (mine)
         {
