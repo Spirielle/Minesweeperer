@@ -4,14 +4,15 @@ using System.Collections;
 public class Tile : MonoBehaviour {
 
     // Is this a mine?
-    public bool             mine;
-    public bool             discovered = false;
-    public bool             flagSet = false;
-    private GridManager     grid;
-    private GameManager     gameManager;
+    public bool mine;
+    public bool discovered = false;
+    public bool flagSet = false;
+    private GridManager grid;
+    private GameManager gameManager;
+    private SmileyButton smileyButton;
 
-    private int?            nbOfAdjacentMines;
-    public int              NbOfAdjacentMines
+    private int? nbOfAdjacentMines;
+    public int  NbOfAdjacentMines
     {
         get
         {
@@ -29,6 +30,7 @@ public class Tile : MonoBehaviour {
     void Start () {
         grid = FindObjectOfType<GridManager>();
         gameManager = FindObjectOfType<GameManager>();
+        smileyButton = FindObjectOfType<SmileyButton>();
     }
 
     public void LoadSprite()
@@ -47,13 +49,6 @@ public class Tile : MonoBehaviour {
     //Events
     void OnMouseOver()
     {
-        //if the game is not over and the player presses the left mouse button
-        if (!gameManager.GameOver && !gameManager.Victory && Input.GetMouseButtonDown(0) && !flagSet && !discovered)
-        {
-            //discover the tile
-            DiscoverTile();
-        }
-
         //if the game is not over and the player presses the right mouse button
         if(!gameManager.GameOver && !gameManager.Victory && Input.GetMouseButtonDown(1) && !discovered)
         {
@@ -61,12 +56,23 @@ public class Tile : MonoBehaviour {
             ToggleFlag();
         }
     }
-
-    //set the game to game over
-    private void GameOver()
+    void OnMouseUpAsButton()
     {
-        print("you lose");
-        gameManager.GameOver = true;
+        //if the game is not over and the player presses the left mouse button
+        if (!gameManager.GameOver && !gameManager.Victory && !flagSet && !discovered)
+        {
+            //discover the tile
+            DiscoverTile();
+        }
+    }
+
+    void OnMouseDown()
+    {
+        gameManager.TileBeingPressed = true;
+    }
+    void OnMouseUp()
+    {
+        gameManager.TileBeingPressed = false;
     }
 
     //flip the tile to discover what is underneath
@@ -78,7 +84,7 @@ public class Tile : MonoBehaviour {
             grid.UncoverMines();
 
             // game over
-            GameOver();
+            gameManager.SetToGameOver();
         }
         // It's not a mine
         else
