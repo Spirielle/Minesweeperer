@@ -16,7 +16,7 @@ public class GridManager : MonoBehaviour {
     public Sprite           defaultSprite;
     private GameObject      grid;
 
-    void Start () {
+    void Awake () {
         tiles = new Tile[numberOfColumns, numberOfRows];
         CreateTiles();
     }

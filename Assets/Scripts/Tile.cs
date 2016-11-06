@@ -130,6 +130,7 @@ public class Tile : MonoBehaviour {
             if (mine)
             {
                 gameManager.numberOfBombsLeft--;
+                gameManager.FlaggedMine();
             }
             gameManager.NumberOfFlagSet++;
         }

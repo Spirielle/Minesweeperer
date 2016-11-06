@@ -8,15 +8,15 @@ using System.Collections;
 public class GameManager : MonoBehaviour
 {
     public int numberOfBombsLeft;
-    private GridManager grid;
-    private SmileyButton smileyButton;
+    protected GridManager grid;
+    protected SmileyButton smileyButton;
     public SpriteCounter bombCounter;   //TODO supi: would it be better to use getByTag or something?
     public SpriteCounter timerDisplay;
-    private bool m_GameOver;
-    private bool m_Victory;
-    private bool m_TileBeingPressed;
-    private int m_numberOfFlagsSet = 0;
-    private float m_timer = 0.0f;
+    protected bool m_GameOver;
+    protected bool m_Victory;
+    protected bool m_TileBeingPressed;
+    protected int m_numberOfFlagsSet = 0;
+    protected float m_timer = 0.0f;
 
     public bool GameStarted { get; set; }
 
@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviour
     }
 
     //reset game
-    public void ResetGame()
+    public virtual void ResetGame()
     {
         GameOver = false;
         grid.ResetBoard();
@@ -113,4 +113,8 @@ public class GameManager : MonoBehaviour
         Timer = 0.0f;
     }
 
+    public virtual void FlaggedMine()
+    {
+
+    }
 }
