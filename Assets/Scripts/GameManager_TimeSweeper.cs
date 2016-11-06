@@ -21,7 +21,7 @@ public class GameManager_TimeSweeper : GameManager
 
     void Update()
     {
-        if (GameStarted)
+        if (GameStarted && !GameOver && !Victory)
             Timer -= Time.deltaTime;
          
         //"R" resets the game

@@ -106,6 +106,9 @@ public class Tile : MonoBehaviour {
     //toggle the flag sprite on and off
     private void ToggleFlag()
     {
+        if (!gameManager.GameStarted)
+            gameManager.GameStarted = true;
+
         //if its already a flag return it to default
         if (flagSet)
         {
