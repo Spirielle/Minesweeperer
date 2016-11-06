@@ -113,8 +113,54 @@ public class GameManager : MonoBehaviour
         Timer = 0.0f;
     }
 
-    public virtual void FlaggedMine()
+    public virtual void HitMine(Tile tile)
     {
+        grid.UncoverMines();
 
+        // game over
+        SetToGameOver();
+    }
+
+    public virtual void FlipTile(Tile tile)
+    {
+        // show adjacent mine number
+        tile.LoadSprite();
+
+        int x = (int)tile.transform.position.x;
+        int y = (int)tile.transform.position.y;
+
+        // uncover area without mines
+        grid.FloodFillUncover(x, y, new bool[grid.numberOfColumns, grid.numberOfRows]);
+    }
+
+    public virtual void ToggleFlag(Tile tile)
+    {
+        //if its already a flag return it to default
+        if (tile.flagSet)
+        {
+            tile.flagSet = false;
+            tile.GetComponent<SpriteRenderer>().sprite = grid.defaultSprite;
+
+            //updates info for victory condition
+            if (tile.mine)
+            {
+                numberOfBombsLeft++;
+            }
+            NumberOfFlagSet--;
+        }
+
+        //otherwise set it to flag
+        else
+        {
+            tile.flagSet = true;
+            tile.GetComponent<SpriteRenderer>().sprite = grid.flagSprite;
+
+            //updates info for victory condition
+            if (tile.mine)
+            {
+                numberOfBombsLeft--;
+            }
+            NumberOfFlagSet++;
+        }
     }
 }

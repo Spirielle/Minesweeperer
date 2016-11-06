@@ -84,22 +84,13 @@ public class Tile : MonoBehaviour {
         // It's a mine
         if (mine)
         {
-            grid.UncoverMines();
-
-            // game over
-            gameManager.SetToGameOver();
+            gameManager.HitMine(this);
+            
         }
         // It's not a mine
         else
         {
-            // show adjacent mine number
-            LoadSprite();
-
-            int x = (int)transform.position.x;
-            int y = (int)transform.position.y;
-
-            // uncover area without mines
-            grid.FloodFillUncover(x, y, new bool[grid.numberOfColumns, grid.numberOfRows]);
+            gameManager.FlipTile(this);
         }
     }
 
@@ -109,33 +100,6 @@ public class Tile : MonoBehaviour {
         if (!gameManager.GameStarted)
             gameManager.GameStarted = true;
 
-        //if its already a flag return it to default
-        if (flagSet)
-        {
-            flagSet = false;
-            GetComponent<SpriteRenderer>().sprite = grid.defaultSprite;
-
-            //updates info for victory condition
-            if (mine)
-            {
-                gameManager.numberOfBombsLeft++;
-            }
-            gameManager.NumberOfFlagSet--;
-        }
-
-        //otherwise set it to flag
-        else
-        {
-            flagSet = true;
-            GetComponent<SpriteRenderer>().sprite = grid.flagSprite;
-
-            //updates info for victory condition
-            if (mine)
-            {
-                gameManager.numberOfBombsLeft--;
-                gameManager.FlaggedMine();
-            }
-            gameManager.NumberOfFlagSet++;
-        }
+        gameManager.ToggleFlag(this);
     }
 }

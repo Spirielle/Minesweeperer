@@ -9,6 +9,7 @@ public class GameManager_TimeSweeper : GameManager
 {
     public float timerDuration;
     public float timerBonus = 3;
+    public float timerBombPenalty = 10;
     
     void Start()
     {
@@ -23,7 +24,10 @@ public class GameManager_TimeSweeper : GameManager
     {
         if (GameStarted && !GameOver && !Victory)
             Timer -= Time.deltaTime;
-         
+
+        if (Timer < 0)
+            Timer = 0;
+
         //"R" resets the game
         if (Input.GetKeyUp(KeyCode.R))
             ResetGame();
@@ -53,9 +57,42 @@ public class GameManager_TimeSweeper : GameManager
         Timer = timerDuration;
     }
 
-    public override void FlaggedMine()
+    public override void ToggleFlag(Tile tile)
     {
-        Timer += timerBonus;
-        Debug.Log(Timer);
+        //if its already a flag return it to default
+        if (tile.flagSet)
+        {
+            tile.flagSet = false;
+            tile.GetComponent<SpriteRenderer>().sprite = grid.defaultSprite;
+
+            //updates info for victory condition
+            if (tile.mine)
+            {
+                numberOfBombsLeft++;
+            }
+            NumberOfFlagSet--;
+        }
+
+        //otherwise set it to flag
+        else
+        {
+            tile.flagSet = true;
+            tile.GetComponent<SpriteRenderer>().sprite = grid.flagSprite;
+
+            //updates info for victory condition
+            if (tile.mine)
+            {
+                numberOfBombsLeft--;
+                Timer += timerBonus;
+            }
+            NumberOfFlagSet++;
+        }
+    }
+    
+
+    public override void HitMine(Tile tile)
+    {
+        Timer -= timerBombPenalty;
+        tile.LoadSprite();
     }
 }
