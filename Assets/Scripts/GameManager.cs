@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
         set { m_Victory = value; }
     }
 
-    public bool TileBeingPressed
+    public virtual bool TileBeingPressed
     {
         get { return m_TileBeingPressed; }
         set {
@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public int NumberOfFlagSet
+    public virtual int NumberOfFlagSet
     {
         get { return m_numberOfFlagsSet; }
         set
@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public float Timer
+    public virtual float Timer
     {
         get { return m_timer; }
         set
@@ -87,7 +87,7 @@ public class GameManager : MonoBehaviour
     }
 
     //set the game to game over
-    public void SetToGameOver()
+    public virtual void SetToGameOver()
     {
         print("you lose");
         GameOver = true;
@@ -95,7 +95,7 @@ public class GameManager : MonoBehaviour
     }
 
     //set the game to victory
-    public void SetToVictory()
+    public virtual void SetToVictory()
     {
         Debug.Log("You Win!");
         Victory = true;
