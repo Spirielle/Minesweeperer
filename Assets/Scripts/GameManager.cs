@@ -79,7 +79,7 @@ public class GameManager : MonoBehaviour
             ResetGame();
 
         //if there are no bombs left and there are the same amount of flags placed you win
-        if(numberOfBombsLeft == 0 && NumberOfFlagSet == grid.numberOfBombs)
+        if(numberOfBombsLeft <= 0 && NumberOfFlagSet == grid.numberOfBombs)
             SetToVictory();
 
         //to keep track of bambs and flag for debugging

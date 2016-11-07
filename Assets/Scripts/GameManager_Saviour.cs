@@ -119,7 +119,7 @@ public class GameManager_Saviour : GameManager
     private void DisplayDeathMessage()
     {
         int peopleKilled = grid.numberOfBombs * savedPerBomb - peopleSaved;
-        deathMessage = "While you may have saved " + peopleSaved + " people, your miss-step has caused the lives of " + peopleKilled + ".";
+        deathMessage = "While you may have saved " + peopleSaved + " people, your miss-step has cost the lives of " + peopleKilled + ".";
         deathText.text = deathMessage;
         deathCanvas.gameObject.SetActive(true);
     }
