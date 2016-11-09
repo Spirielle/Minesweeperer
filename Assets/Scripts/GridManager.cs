@@ -6,10 +6,10 @@ using System.Collections.Generic;
 
 public class GridManager : MonoBehaviour {
     public GameObject       tilePrefab;
-    public int              numberOfColumns = 10;
-    public int              numberOfRows = 4;
+    public int              numberOfColumns = 15;
+    public int              numberOfRows = 15;
     public float            distanceBetweenTiles = 1.0f;
-    public int              numberOfBombs = 30;
+    public int              numberOfBombs = 20;
     public Tile[,]  tiles;
     public Sprite[]         tileSprites = new Sprite[9];
     public Sprite           mineSprite;

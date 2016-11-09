@@ -12,9 +12,12 @@ public class CameraSetup : MonoBehaviour
 
     void Start()
     {
+        float headerSize = 1;
+        float borderSize = 1;
+
         //set the position of the camera based on the grid info
         float xPos = (grid.numberOfColumns * grid.distanceBetweenTiles) / 2;
-        float yPos = (grid.numberOfRows * grid.distanceBetweenTiles) / 2;
+        float yPos = ((grid.numberOfRows * grid.distanceBetweenTiles) / 2) + headerSize;
 
         //offset the camera if the tiles are even so it is centered to the grid
         if(!(grid.numberOfColumns % 2 == 0))
@@ -30,6 +33,6 @@ public class CameraSetup : MonoBehaviour
         transform.position = new Vector3(xPos, yPos, -1);
 
         //set the size of the camera so it emcompasses the whole grid -- columns can't exceed twice the number of rows
-        GetComponent<Camera>().orthographicSize = (grid.numberOfRows * grid.distanceBetweenTiles) / 2 + (grid.numberOfRows * grid.distanceBetweenTiles * .05f);
+        GetComponent<Camera>().orthographicSize = (grid.numberOfRows * grid.distanceBetweenTiles) / 2 + headerSize + borderSize + (grid.numberOfRows * grid.distanceBetweenTiles * .05f);
     }
 }
