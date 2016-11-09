@@ -66,6 +66,7 @@
     <Compile Include="Assets\Scripts\Buttons.cs" />
     <Compile Include="Assets\Scripts\CameraSetup.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\GameManager_BlindSweeper.cs" />
     <Compile Include="Assets\Scripts\GameManager_ColdWar.cs" />
     <Compile Include="Assets\Scripts\GameManager_Saviour.cs" />
     <Compile Include="Assets\Scripts\GameManager_TimeSweeper.cs" />
