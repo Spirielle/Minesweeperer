@@ -1,0 +1,27 @@
+
+
+MISSING FEATURES
+____________________
+
+- Right Clicking on a flag makes a "?"
+
+- Clicking on a number surrounded by the same amount of flags discovers remaining surrounding tiles.
+
+- If click on a mine, the sprite is supposed to be mine on red background
+
+- When losing, if a flag was misplaced, it should appear as a mine with a red X on it.
+
+- Diagonal tiles should me discovered too
+
+- First click should never be a mine
+
+- First click should be on a blank tile (not a number)
+
+
+
+BUGS
+____________________
+
+- Upon losing, the timer doesn't stop.
+
+- Bomb count doesn't refresh

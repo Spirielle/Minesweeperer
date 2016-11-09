@@ -63,8 +63,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Buttons.cs" />
     <Compile Include="Assets\Scripts\CameraSetup.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\GameManager_ColdWar.cs" />
+    <Compile Include="Assets\Scripts\GameManager_Saviour.cs" />
+    <Compile Include="Assets\Scripts\GameManager_TimeSweeper.cs" />
+    <Compile Include="Assets\Scripts\GameManager_Trapped.cs" />
     <Compile Include="Assets\Scripts\GridManager.cs" />
     <Compile Include="Assets\Scripts\SmileyButton.cs" />
     <Compile Include="Assets\Scripts\SpriteCounter.cs" />

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 //TODO Julian: Create GameManager to check for win and lose conditions. 
 
@@ -97,7 +98,7 @@ public class GridManager : MonoBehaviour {
     public bool MineAt(int x, int y)
     {
         // Coordinates in range? Then check for mine.
-        if (x >= 0 && y >= 0 && x < numberOfColumns && y < numberOfRows)
+        if (TileIsInRange(x, y))
             return tiles[x, y].mine;
         return false;
     }
@@ -119,6 +120,62 @@ public class GridManager : MonoBehaviour {
         return count;
     }
 
+    public List<Tile> AdjacentTiles(int x, int y)
+    {
+        var adjacents = new List<Tile>();
+        int tx, ty;
+        
+        tx = x; ty = y + 1;
+        if (TileIsInRange(tx, ty))
+            adjacents.Add(tiles[tx, ty]);
+
+        tx = x + 1; ty = y + 1;
+        if (TileIsInRange(tx, ty))
+            adjacents.Add(tiles[tx, ty]);
+
+        tx = x + 1; ty = y;
+        if (TileIsInRange(tx, ty))
+            adjacents.Add(tiles[tx, ty]);
+
+        tx = x + 1; ty = y - 1;
+        if (TileIsInRange(tx, ty))
+            adjacents.Add(tiles[tx, ty]);
+
+        tx = x; ty = y - 1;
+        if (TileIsInRange(tx, ty))
+            adjacents.Add(tiles[tx, ty]);
+
+        tx = x -1; ty = y - 1;
+        if (TileIsInRange(tx, ty))
+            adjacents.Add(tiles[tx, ty]);
+
+        tx = x - 1; ty = y;
+        if (TileIsInRange(tx, ty))
+            adjacents.Add(tiles[tx, ty]);
+
+        tx = x - 1; ty = y + 1;
+        if (TileIsInRange(tx, ty))
+            adjacents.Add(tiles[tx, ty]);
+
+        return adjacents;
+    }
+
+    public List<Tile> CoveredTiles()
+    {
+        var coveredTiles = new List<Tile>();
+        for (int row = 0; row < numberOfRows; ++row)
+            for (int column = 0; column < numberOfColumns; ++column)
+                if (tiles[column, row].isCovered())
+                    coveredTiles.Add(tiles[column, row]);
+
+        return coveredTiles;
+    }
+
+    bool TileIsInRange(int x, int y)
+    {
+        return (x >= 0 && y >= 0 && x < numberOfColumns && y < numberOfRows);
+    }
+
     // Flood Fill empty elements
     public void FloodFillUncover(int x, int y, bool[,] visited)
     {
@@ -128,8 +185,6 @@ public class GridManager : MonoBehaviour {
             // visited already?
             if (visited[x, y])
                 return;
-
-            CalculateNbOfAdjacentMines(x, y);
 
             // uncover element
             if (!tiles[x, y].flagSet)

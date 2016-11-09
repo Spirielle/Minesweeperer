@@ -16,13 +16,9 @@ public class Tile : MonoBehaviour {
     {
         get
         {
-            if(!nbOfAdjacentMines.HasValue)
-            {
-                int x = (int)transform.position.x;
-                int y = (int)transform.position.y;
-                nbOfAdjacentMines = grid.CalculateNbOfAdjacentMines(x, y);
-            }
-
+            int x = (int)transform.position.x;
+            int y = (int)transform.position.y;
+            nbOfAdjacentMines = grid.CalculateNbOfAdjacentMines(x, y);
             return nbOfAdjacentMines.Value;
         }
     }
@@ -43,7 +39,8 @@ public class Tile : MonoBehaviour {
     // Is it still covered?
     public bool isCovered()
     {
-        return GetComponent<SpriteRenderer>().sprite.texture.name == "default";
+        //return GetComponent<SpriteRenderer>().sprite.texture.name == "default";
+        return !discovered;
     }
 
     //Events
