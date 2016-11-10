@@ -23,7 +23,7 @@ ____________________
 BUGS
 ____________________
 
-- Upon losing, the timer doesn't stop.
+- DONE    Upon losing, the timer doesn't stop.
 
 - Bomb count doesn't refresh
 

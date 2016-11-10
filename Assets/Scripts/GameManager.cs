@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if(GameStarted)
+        if(GameStarted && !GameOver && !Victory)
             Timer += Time.deltaTime;
 
         //"R" resets the game

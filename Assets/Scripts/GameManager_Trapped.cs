@@ -25,7 +25,7 @@ public class GameManager_Trapped : GameManager
             flipped = true;
         }
 
-        if (GameStarted)
+        if (GameStarted && !GameOver && !Victory)
             Timer += Time.deltaTime;
 
         //"R" resets the game
