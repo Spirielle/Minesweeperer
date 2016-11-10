@@ -17,7 +17,7 @@ ____________________
 
 - First click should be on a blank tile (not a number)
 
-- Smiley buttons could use a pressed sprite 
+- DONE    Smiley buttons could use a pressed sprite 
 
 
 BUGS
