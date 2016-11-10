@@ -204,6 +204,12 @@ public class GridManager : MonoBehaviour {
             FloodFillUncover(x + 1, y, visited);
             FloodFillUncover(x, y - 1, visited);
             FloodFillUncover(x, y + 1, visited);
+
+            //Recursion in corners
+            FloodFillUncover(x - 1, y - 1, visited);
+            FloodFillUncover(x + 1, y + 1, visited);
+            FloodFillUncover(x + 1, y - 1, visited);
+            FloodFillUncover(x - 1, y + 1, visited);
         }
     }
 
