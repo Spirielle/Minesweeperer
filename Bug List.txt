@@ -26,3 +26,5 @@ ____________________
 - Upon losing, the timer doesn't stop.
 
 - Bomb count doesn't refresh
+
+- In Trapped version, at the end the state is not reset properly
