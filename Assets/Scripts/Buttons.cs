@@ -23,4 +23,29 @@ public class Buttons : MonoBehaviour
     {
         SceneManager.LoadScene(3);
     }
+
+    public void LoadColdWar()
+    {
+        SceneManager.LoadScene(4);
+    }
+
+    public void LoadBlindsweeper()
+    {
+        SceneManager.LoadScene(5);
+    }
+
+    public void LoadSurrender()
+    {
+        SceneManager.LoadScene(6);
+    }
+
+    public void LoadVanilla()
+    {
+        SceneManager.LoadScene(7);
+    }
+
+    public void LoadIntro()
+    {
+        SceneManager.LoadScene(0);
+    }
 }
