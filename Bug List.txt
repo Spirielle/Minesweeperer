@@ -25,6 +25,10 @@ ____________________
 
 - DONE    Upon losing, the timer doesn't stop.
 
-- Bomb count doesn't refresh
+- DONE     Bomb count doesn't refresh
 
-- In Trapped version, at the end the state is not reset properly
+- DONE     In Trapped version, at the end the state is not reset properly
+
+- DONE     In Trapped, the bomb count is not initialized when we start
+
+- Pressed smiley doesn't fit in surrender

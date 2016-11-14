@@ -8,7 +8,7 @@ public class SpriteCounter : MonoBehaviour {
     public Sprite dashSprite;
     private SpriteRenderer[] digits;
 
-    void Start () {
+    void Awake () {
         digits = GetComponentsInChildren<SpriteRenderer>();
 	}
 	

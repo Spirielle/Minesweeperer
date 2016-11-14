@@ -7,29 +7,14 @@ public class GameManager_BlindSweeper : GameManager {
     bool playedClickOnce = false;
     Tile clickedTile;
 
-	void Start () {
-        grid = GetComponent<GridManager>();
+	protected override void Start () {
+        base.Start();
         click = GetComponent<AudioSource>();
-        smileyButton = FindObjectOfType<SmileyButton>();
-        numberOfBombsLeft = grid.numberOfBombs;
-        bombCounter.Display(grid.numberOfBombs);
     }
 	
 
-	void Update () {
-        if (GameStarted && !GameOver && !Victory)
-            Timer += Time.deltaTime;
-
-        if (Timer < 0)
-            Timer = 0;
-
-        //"R" resets the game
-        if (Input.GetKeyUp(KeyCode.R))
-            ResetGame();
-
-        //if there are no bombs left and there are the same amount of flags placed you win
-        if (numberOfBombsLeft == 0 && NumberOfFlagSet == grid.numberOfBombs)
-            SetToVictory();
+	protected override void Update () {
+        base.Update();
 
         if (TileBeingPressed && !playedClickOnce)
         {
@@ -46,9 +31,6 @@ public class GameManager_BlindSweeper : GameManager {
         {
             HitMine(clickedTile);
         }
-
-        //to keep track of bombs and flag for debugging
-        Debug.Log("bombs left: " + numberOfBombsLeft + "     flags placed: " + NumberOfFlagSet);
     }
 
     public override void FlipTile(Tile tile)
@@ -56,7 +38,10 @@ public class GameManager_BlindSweeper : GameManager {
         if (tile.mine)
             tile.LoadSprite();
         else
+        {
             tile.GetComponent<SpriteRenderer>().sprite = grid.tileSprites[0];   //Alway load the empty tile
+            grid.NumberOfUncoveredTiles++;
+        }
     }
 
     public override void ResetGame()

@@ -7,7 +7,6 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
-    public int numberOfBombsLeft;
     protected GridManager grid;
     protected SmileyButton smileyButton;
     public SpriteCounter bombCounter;   //TODO supi: would it be better to use getByTag or something?
@@ -19,7 +18,6 @@ public class GameManager : MonoBehaviour
     protected float m_timer = 0.0f;
 
     public bool GameStarted { get; set; }
-
     public bool GameOver
     {
         get { return m_GameOver; }
@@ -61,15 +59,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void Start()
+    protected virtual void Start()
     {
         grid = GetComponent<GridManager>();
         smileyButton = FindObjectOfType<SmileyButton>();
-        numberOfBombsLeft = grid.numberOfBombs;
         bombCounter.Display(grid.numberOfBombs);
     }
 
-    void Update()
+    protected virtual void Update()
     {
         if(GameStarted && !GameOver && !Victory)
             Timer += Time.deltaTime;
@@ -78,12 +75,9 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.R))
             ResetGame();
 
-        //if there are no bombs left and there are the same amount of flags placed you win
-        if(numberOfBombsLeft <= 0 && NumberOfFlagSet == grid.numberOfBombs)
+        //if there are no bombs left
+        if(grid.NumberOfUncoveredTiles >= grid.NumberOfTiles - grid.numberOfBombs)
             SetToVictory();
-
-        //to keep track of bambs and flag for debugging
-        Debug.Log("bombs left: " + numberOfBombsLeft + "     flags placed: " + NumberOfFlagSet);
     }
 
     //set the game to game over
@@ -106,6 +100,7 @@ public class GameManager : MonoBehaviour
     public virtual void ResetGame()
     {
         GameOver = false;
+        Victory = false;
         grid.ResetBoard();
         smileyButton.UpdateSprite();
         NumberOfFlagSet = 0;
@@ -123,14 +118,11 @@ public class GameManager : MonoBehaviour
 
     public virtual void FlipTile(Tile tile)
     {
-        // show adjacent mine number
-        tile.LoadSprite();
-
         int x = (int)tile.transform.position.x;
         int y = (int)tile.transform.position.y;
 
         // uncover area without mines
-        grid.FloodFillUncover(x, y, new bool[grid.numberOfColumns, grid.numberOfRows]);
+        grid.FloodFillUncover(x, y);
     }
 
     public virtual void ToggleFlag(Tile tile)
@@ -141,11 +133,6 @@ public class GameManager : MonoBehaviour
             tile.flagSet = false;
             tile.GetComponent<SpriteRenderer>().sprite = grid.defaultSprite;
 
-            //updates info for victory condition
-            if (tile.mine)
-            {
-                numberOfBombsLeft++;
-            }
             NumberOfFlagSet--;
         }
 
@@ -155,11 +142,6 @@ public class GameManager : MonoBehaviour
             tile.flagSet = true;
             tile.GetComponent<SpriteRenderer>().sprite = grid.flagSprite;
 
-            //updates info for victory condition
-            if (tile.mine)
-            {
-                numberOfBombsLeft--;
-            }
             NumberOfFlagSet++;
         }
     }

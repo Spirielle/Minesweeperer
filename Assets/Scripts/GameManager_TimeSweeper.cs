@@ -11,16 +11,13 @@ public class GameManager_TimeSweeper : GameManager
     public float timerBonus = 3;
     public float timerBombPenalty = 10;
     
-    void Start()
+    protected override void Start()
     {
-        grid = GetComponent<GridManager>();
-        smileyButton = FindObjectOfType<SmileyButton>();
-        numberOfBombsLeft = grid.numberOfBombs;
-        bombCounter.Display(numberOfBombsLeft);
+        base.Start();
         Timer = timerDuration;
     }
 
-    void Update()
+    protected override void Update()
     {
         if (GameStarted && !GameOver && !Victory)
             Timer -= Time.deltaTime;
@@ -32,14 +29,11 @@ public class GameManager_TimeSweeper : GameManager
         if (Input.GetKeyUp(KeyCode.R))
             ResetGame();
 
-        //if there are no bombs left and there are the same amount of flags placed you win
-        if (numberOfBombsLeft == 0 && NumberOfFlagSet == grid.numberOfBombs)
+        //if there are no bombs left
+        if (grid.NumberOfUncoveredTiles >= grid.NumberOfTiles - grid.numberOfBombs)
             SetToVictory();
 
-        //to keep track of bambs and flag for debugging
-        Debug.Log("bombs left: " + numberOfBombsLeft + "     flags placed: " + NumberOfFlagSet);
-
-        if(Timer <= 0 && GameStarted)
+        if (Timer <= 0 && GameStarted)
         {
             SetToGameOver();
             grid.UncoverMines();
@@ -49,11 +43,7 @@ public class GameManager_TimeSweeper : GameManager
 
     public override void ResetGame()
     {
-        GameOver = false;
-        grid.ResetBoard();
-        smileyButton.UpdateSprite();
-        NumberOfFlagSet = 0;
-        GameStarted = false;
+        base.ResetGame();
         Timer = timerDuration;
     }
 
@@ -65,11 +55,6 @@ public class GameManager_TimeSweeper : GameManager
             tile.flagSet = false;
             tile.GetComponent<SpriteRenderer>().sprite = grid.defaultSprite;
 
-            //updates info for victory condition
-            if (tile.mine)
-            {
-                numberOfBombsLeft++;
-            }
             NumberOfFlagSet--;
         }
 
@@ -81,14 +66,11 @@ public class GameManager_TimeSweeper : GameManager
 
             //updates info for victory condition
             if (tile.mine)
-            {
-                numberOfBombsLeft--;
                 Timer += timerBonus;
-            }
+
             NumberOfFlagSet++;
         }
     }
-    
 
     public override void HitMine(Tile tile)
     {

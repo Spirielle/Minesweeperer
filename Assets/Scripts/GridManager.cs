@@ -10,12 +10,16 @@ public class GridManager : MonoBehaviour {
     public int              numberOfRows = 15;
     public float            distanceBetweenTiles = 1.0f;
     public int              numberOfBombs = 20;
-    public Tile[,]  tiles;
+    public Tile[,]          tiles;
     public Sprite[]         tileSprites = new Sprite[9];
     public Sprite           mineSprite;
     public Sprite           flagSprite;
     public Sprite           defaultSprite;
     private GameObject      grid;
+
+    public int NumberOfUncoveredTiles { get; set; }
+    public int NumberOfTiles
+        { get { return numberOfRows * numberOfColumns; }}
 
     void Awake () {
         tiles = new Tile[numberOfColumns, numberOfRows];
@@ -176,8 +180,13 @@ public class GridManager : MonoBehaviour {
         return (x >= 0 && y >= 0 && x < numberOfColumns && y < numberOfRows);
     }
 
+    public void FloodFillUncover(int x, int y)
+    {
+        FloodFillUncover(x, y, new bool[numberOfColumns, numberOfRows]);
+    }
+
     // Flood Fill empty elements
-    public void FloodFillUncover(int x, int y, bool[,] visited)
+    private void FloodFillUncover(int x, int y, bool[,] visited)
     {
         // Coordinates in Range?
         if (x >= 0 && y >= 0 && x < numberOfColumns && y < numberOfRows)
@@ -187,17 +196,15 @@ public class GridManager : MonoBehaviour {
                 return;
 
             // uncover element
-            if (!tiles[x, y].flagSet)
-            {
-                tiles[x, y].LoadSprite();
-            }
+            if (!tiles[x, y].flagSet && !tiles[x, y].discovered)
+                UncoverTile(x, y);
+
+            // set visited flag
+            visited[x, y] = true;
 
             // close to a mine? then no more work needed here
             if (tiles[x, y].NbOfAdjacentMines > 0)
                 return;
-
-            // set visited flag
-            visited[x, y] = true;
 
             // recursion
             FloodFillUncover(x - 1, y, visited);
@@ -213,10 +220,17 @@ public class GridManager : MonoBehaviour {
         }
     }
 
+    public void UncoverTile(int x, int y)
+    {
+        tiles[x, y].LoadSprite();
+        NumberOfUncoveredTiles++;
+    }
+
     //resets the board
     public void ResetBoard()
     {
         Destroy(grid.gameObject);
         CreateTiles();
+        NumberOfUncoveredTiles = 0;
     }
 }

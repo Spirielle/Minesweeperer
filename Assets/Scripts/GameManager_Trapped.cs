@@ -10,14 +10,12 @@ public class GameManager_Trapped : GameManager
 {
     private bool flipped = false;
 
-    void Start()
+    protected override void Start()
     {
-        grid = GetComponent<GridManager>();
-        smileyButton = FindObjectOfType<SmileyButton>();
-        numberOfBombsLeft = grid.numberOfBombs;
+        base.Start();
     }
 
-    void Update()
+    protected override void Update()
     {
         if (!flipped)
         {
@@ -25,28 +23,12 @@ public class GameManager_Trapped : GameManager
             flipped = true;
         }
 
-        if (GameStarted && !GameOver && !Victory)
-            Timer += Time.deltaTime;
-
-        //"R" resets the game
-        if (Input.GetKeyUp(KeyCode.R))
-            ResetGame();
-
-        //if there are no bombs left and there are the same amount of flags placed you win
-        if (numberOfBombsLeft == 0 && NumberOfFlagSet == grid.numberOfBombs)
-            SetToVictory();
-
-        //to keep track of bambs and flag for debugging
-        Debug.Log("bombs left: " + numberOfBombsLeft + "     flags placed: " + NumberOfFlagSet);
+        base.Update();
     }
 
     public override void ResetGame()
     {
-        GameOver = false;
-        grid.ResetBoard();
-        smileyButton.UpdateSprite();
-        NumberOfFlagSet = 0;
-        GameStarted = false;
+        base.ResetGame();
         flipped = false;
     }
 
@@ -126,10 +108,7 @@ public class GameManager_Trapped : GameManager
         int y = (int)tile.transform.position.y;
 
         if (IsTileInteractable(x, y))
-        {
-            // show adjacent mine number
-            tile.LoadSprite();
-        }
+            grid.UncoverTile(x, y);
     }
 
     //toggle the flag only if one of its neighbour is discovered
@@ -150,7 +129,7 @@ public class GameManager_Trapped : GameManager
         int y = (int)tile.transform.position.y;
 
         if (IsTileInteractable(x, y))
-        base.HitMine(tile);
+            base.HitMine(tile);
     }
 
     private void InitialFlip()
@@ -163,11 +142,8 @@ public class GameManager_Trapped : GameManager
 
             if (!grid.tiles[x, y].mine)
             {
-                // show adjacent mine number
-                grid.tiles[x,y].LoadSprite();
-
                 // uncover area without mines
-                grid.FloodFillUncover(x, y, new bool[grid.numberOfColumns, grid.numberOfRows]);
+                grid.FloodFillUncover(x, y);
                 looking = false;
             }
         }

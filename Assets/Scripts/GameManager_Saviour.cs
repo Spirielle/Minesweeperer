@@ -28,33 +28,12 @@ public class GameManager_Saviour : GameManager
             civiliansSaved.Display(peopleSaved);
         }
     }
-    void Start()
+    protected  override void Start()
     {
         grid = GetComponent<GridManager>();
         smileyButton = FindObjectOfType<SmileyButton>();
-        numberOfBombsLeft = grid.numberOfBombs;
         savedPerBomb = Random.Range(4, 8);
         deathCanvas.gameObject.SetActive(false);
-    }
-
-    void Update()
-    {
-        if (GameStarted && !GameOver && !Victory)
-            Timer += Time.deltaTime;
-
-        if (Timer < 0)
-            Timer = 0;
-
-        //"R" resets the game
-        if (Input.GetKeyUp(KeyCode.R))
-            ResetGame();
-
-        //if there are no bombs left and there are the same amount of flags placed you win
-        if (numberOfBombsLeft == 0 && NumberOfFlagSet == grid.numberOfBombs)
-            SetToVictory();
-
-        //to keep track of bombs and flag for debugging
-        Debug.Log("bombs left: " + numberOfBombsLeft + "     flags placed: " + NumberOfFlagSet);
     }
 
     public override void ResetGame()
@@ -69,6 +48,7 @@ public class GameManager_Saviour : GameManager
         deathCanvas.gameObject.SetActive(false);
     }
 
+    //TODO: update count
     public override void ToggleFlag(Tile tile)
     {
         //if its already a flag return it to default
@@ -77,11 +57,9 @@ public class GameManager_Saviour : GameManager
             tile.flagSet = false;
             tile.GetComponent<SpriteRenderer>().sprite = grid.defaultSprite;
 
-            //updates info for victory condition
             if (tile.mine)
-            {
-                numberOfBombsLeft++;
-            }
+                peopleSaved -= savedPerBomb;
+
             NumberOfFlagSet--;
         }
 
@@ -91,27 +69,22 @@ public class GameManager_Saviour : GameManager
             tile.flagSet = true;
             tile.GetComponent<SpriteRenderer>().sprite = grid.flagSprite;
 
-            //updates info for victory condition
             if (tile.mine)
-            {
-                numberOfBombsLeft--;
                 peopleSaved += savedPerBomb;
-            }
+
             NumberOfFlagSet++;
         }
     }
 
     public override void SetToVictory()
     {
-        Debug.Log("You Win!");
-        Victory = true;
+        base.SetToVictory();
         DisplayVictoryMessage();
-        smileyButton.UpdateSprite();
     }
 
     private void DisplayVictoryMessage()
     {
-        deathMessage = "Congratulations! You have saved all " + peopleSaved + " people lost in the mine field.";
+        deathMessage = "Congratulations! You have saved all " + savedPerBomb * grid.numberOfBombs + " people lost in the mine field.";
         deathText.text = deathMessage;
         deathCanvas.gameObject.SetActive(true);
     }
@@ -126,10 +99,7 @@ public class GameManager_Saviour : GameManager
 
     public override void HitMine(Tile tile)
     {
-        grid.UncoverMines();
-
-        // game over
+        base.HitMine(tile);
         DisplayDeathMessage();
-        SetToGameOver();
     }
 }
